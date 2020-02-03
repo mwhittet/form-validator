@@ -20,6 +20,23 @@ const showSuccess = (input, message) => {
   formControl.className = 'form-control success';
 };
 
+const getFieldName = input => {
+  return (
+    input.id.charAt(0).toUpperCase() + input.id.slice(1).replace(/-/g, ' ')
+  );
+};
+
+// Check required fields
+const checkRequired = inputArr => {
+  inputArr.forEach(input => {
+    if (input.value.trim() === '') {
+      showError(input, `${getFieldName(input)} is required`);
+    } else {
+      showSuccess(input);
+    }
+  });
+};
+
 // Check email is valid
 const isValidEmail = email => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -31,29 +48,5 @@ const isValidEmail = email => {
 form.addEventListener('submit', e => {
   e.preventDefault();
 
-  if (username.value === '') {
-    showError(username, 'Username is required');
-  } else {
-    showSuccess(username);
-  }
-
-  if (email.value === '') {
-    showError(email, 'Email is required');
-  } else if (!isValidEmail(email.value)) {
-    showError(email, 'Email is not valid');
-  } else {
-    showSuccess(email);
-  }
-
-  if (password.value === '') {
-    showError(password, 'Password is required');
-  } else {
-    showSuccess(password);
-  }
-
-  if (confirmPassword.value === '') {
-    showError(confirmPassword, 'Confirm password is required');
-  } else {
-    showSuccess(confirmPassword);
-  }
+  checkRequired([username, email, password, confirmPassword]);
 });
